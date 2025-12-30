@@ -1,11 +1,11 @@
 # Gobblet Gobblers AI Project
-# Core dependencies
 
-# Phase 1: Game Engine (no external dependencies needed)
+# Core (no dependencies)
+# - game.py, arena.py, minimax_player.py, random_player.py
 
-# Phase 2-3: AI Training (install when needed)
-# numpy>=1.24.0
-# torch>=2.0.0
-# matplotlib>=3.7.0
-# pandas>=2.0.0
-# jupyter>=1.0.0
+# Phase 3: Neural Network (optional)
+numpy>=1.24.0
+torch>=2.0.0
+
+# Visualization (optional)
+matplotlib>=3.7.0
