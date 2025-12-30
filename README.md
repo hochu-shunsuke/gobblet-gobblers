@@ -1,6 +1,6 @@
 # 🎮 Gobblet Gobblers AI
 
-3x3ボードで戦う「Gobblet Gobblers」のゲームエンジンと複数のAIプレイヤー
+3x3ボードで戦う「Gobblet Gobblers」のゲームエンジンとAI
 
 ## ゲームルール
 
@@ -10,75 +10,67 @@
 
 ## 📊 AI性能
 
-| AI | vs Random | vs Minimax | 特徴 |
+| AI | vs Random | vs Minimax | 手法 |
 |----|-----------|------------|------|
-| **Minimax** | 100% | - | 完璧な探索 |
-| **NNPlayer** | 82-100% | 0% | Minimaxの手を学習 |
+| **Minimax** | 100% | - | 探索 |
+| **NNPlayer V2** | ~95% | 挑戦中 | ニューラルネット |
 | Random | 50% | 0% | ランダム |
 
 ## 🚀 クイックスタート
 
 ```bash
-# クローン
 git clone https://github.com/hochu-shunsuke/gobblet-gobblers.git
 cd gobblet-gobblers
 
-# 仮想環境セットアップ
+# Python環境セットアップ
 python3 -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
 
 # デモ実行
-cd src
-python demo_nn.py
+cd src && python demo_nn.py
 ```
 
 ## 📁 プロジェクト構造
 
 ```
 gobblet-gobblers/
-├── src/
-│   ├── game.py             # ゲームエンジン
-│   ├── arena.py            # 自動対戦
-│   ├── demo_nn.py          # NNデモ
+├── go-engine/              # 高速データ収集（Go言語）
+│   ├── game.go
+│   ├── player.go
+│   └── main.go
+├── src/                    # ゲームエンジン & AI（Python）
+│   ├── game.py
+│   ├── arena.py
+│   ├── demo_nn.py
 │   └── players/
 │       ├── random_player.py
 │       ├── minimax_player.py
 │       └── nn_player.py
-├── models/
-│   └── gobblet_model.pt    # 学習済みモデル
-└── notebooks/
-    └── train_ai.ipynb      # Colab用訓練ノートブック
+└── models/
+    └── gobblet_model_v2.pt  # 学習済みモデル (88.9%)
 ```
 
-## 💻 使い方
+## ⚡ 高速データ収集（Go）
 
-### 基本対戦
-
-```python
-from game import GobbletGobblers
-from players import RandomPlayer, MinimaxPlayer
-from arena import Arena
-
-arena = Arena(MinimaxPlayer(), RandomPlayer())
-stats = arena.play_games(100)
-print(f"Minimax win rate: {stats['player1_wins']}%")
+```bash
+cd go-engine
+go run .
+# → 1500ゲームを約100秒で収集
 ```
 
-### NNプレイヤー
+## 🧠 AI訓練
 
-```python
-from players import NNPlayer
+1. Go版でデータ収集
+2. JSONファイルをColab等にアップロード
+3. PyTorchで訓練
 
-nn = NNPlayer(model_path='../models/gobblet_model.pt')
-```
+## 📈 開発履歴
 
-## 🧠 AI訓練（Colab）
-
-1. `notebooks/train_ai.ipynb` を Colab で開く
-2. データ収集を実行（Minimax vs Random 1000ゲーム）
-3. ニューラルネットワークを訓練
-4. `gobblet_model.pt` をダウンロード
+| バージョン | 精度 | 内容 |
+|-----------|------|------|
+| V1 | 80.1% | Minimax vs Random で学習 |
+| **V2** | **88.9%** | Minimax vs Minimax + Go高速化 |
 
 ## License
 
