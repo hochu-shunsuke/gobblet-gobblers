@@ -1,94 +1,85 @@
 # 🎮 Gobblet Gobblers AI
 
-Gobblet Gobblersのゲームエンジンと複数のAIプレイヤー
+3x3ボードで戦う「Gobblet Gobblers」のゲームエンジンと複数のAIプレイヤー
 
-## 🎯 プロジェクト概要
+## ゲームルール
 
-| Phase | 内容 | 状態 |
-|-------|------|------|
-| 1 | ゲームエンジン + ランダムAI | ✅ 完成 |
-| 2 | Minimax AI | ✅ 完成 |
-| 3 | ニューラルネットワークAI | ✅ 完成 |
-| 4 | 強化学習AI | 🔜 次のステップ |
+- 各プレイヤーは **S（小）×2、M（中）×2、L（大）×2** のコマを持つ
+- 大きいコマで小さいコマを **Gobble（飲み込み）** できる
+- **3つ並べたら勝ち**（見えているコマのみカウント）
 
-## 📊 AI性能比較
+## 📊 AI性能
 
-| AI | vs Random | vs Minimax |
-|----|-----------|------------|
-| **Minimax** | 100% | - |
-| **NNPlayer** | 82% | 0% |
-| Random | 50% | 0% |
+| AI | vs Random | vs Minimax | 特徴 |
+|----|-----------|------------|------|
+| **Minimax** | 100% | - | 完璧な探索 |
+| **NNPlayer** | 82-100% | 0% | Minimaxの手を学習 |
+| Random | 50% | 0% | ランダム |
+
+## 🚀 クイックスタート
+
+```bash
+# クローン
+git clone https://github.com/hochu-shunsuke/gobblet-gobblers.git
+cd gobblet-gobblers
+
+# 仮想環境セットアップ
+python3 -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+
+# デモ実行
+cd src
+python demo_nn.py
+```
 
 ## 📁 プロジェクト構造
 
 ```
 gobblet-gobblers/
-├── README.md
-├── requirements.txt
-├── notebooks/
-│   └── train_ai.ipynb      # Colab用ノートブック
+├── src/
+│   ├── game.py             # ゲームエンジン
+│   ├── arena.py            # 自動対戦
+│   ├── demo_nn.py          # NNデモ
+│   └── players/
+│       ├── random_player.py
+│       ├── minimax_player.py
+│       └── nn_player.py
 ├── models/
 │   └── gobblet_model.pt    # 学習済みモデル
-├── data/games/             # 対戦ログ
-└── src/
-    ├── game.py             # ゲームエンジン
-    ├── arena.py            # 自動対戦システム
-    ├── collect_data.py     # データ収集
-    └── players/
-        ├── base_player.py
-        ├── random_player.py
-        ├── minimax_player.py
-        └── nn_player.py    # ニューラルネット
+└── notebooks/
+    └── train_ai.ipynb      # Colab用訓練ノートブック
 ```
 
-## 🚀 使い方
+## 💻 使い方
 
-### インストール
-
-```bash
-pip install -r requirements.txt
-```
-
-### ゲームエンジンのテスト
-
-```bash
-cd src
-python game.py
-```
-
-### 自動対戦
+### 基本対戦
 
 ```python
 from game import GobbletGobblers
 from players import RandomPlayer, MinimaxPlayer
 from arena import Arena
 
-minimax = MinimaxPlayer(max_depth=4)
-random_ai = RandomPlayer()
-
-arena = Arena(minimax, random_ai)
+arena = Arena(MinimaxPlayer(), RandomPlayer())
 stats = arena.play_games(100)
-print(stats)
+print(f"Minimax win rate: {stats['player1_wins']}%")
 ```
 
-### NNプレイヤーの使用
+### NNプレイヤー
 
 ```python
 from players import NNPlayer
 
-nn_player = NNPlayer(model_path='models/gobblet_model.pt')
+nn = NNPlayer(model_path='../models/gobblet_model.pt')
 ```
 
-## 📏 ゲームルール
+## 🧠 AI訓練（Colab）
 
-- **ボード**: 3×3
-- **コマ**: 各プレイヤー S×2, M×2, L×2
-- **勝利条件**: 見えているコマで3つ並べる
-- **Gobble**: 大きいコマで小さいコマを覆える
-- **移動**: 盤上のどこへでも移動可能
+1. `notebooks/train_ai.ipynb` を Colab で開く
+2. データ収集を実行（Minimax vs Random 1000ゲーム）
+3. ニューラルネットワークを訓練
+4. `gobblet_model.pt` をダウンロード
 
-## 🔜 次のステップ
+## License
 
-- [ ] 強化学習（自己対戦）の実装
-- [ ] より深いネットワークの試行
-- [ ] Web UIの作成
+MIT
