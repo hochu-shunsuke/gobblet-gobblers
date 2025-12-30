@@ -26,10 +26,6 @@ env/
 # Data (optional - remove if you want to include)
 # data/games/*.json
 
-# Models
-models/*.pt
-models/*.pth
-
 # OS
 .DS_Store
 Thumbs.db
